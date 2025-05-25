@@ -1,0 +1,26 @@
+# File di swap e backup
+*.asv
+*~
+
+# File compilati di MEX
+*.mex*
+
+# File di simulink
+*.slxc
+*.slxp
+
+# Cartelle di code generation
+/codegen/
+/slprj/
+/sfprivate/
+
+# File di figure, log, workspace
+*.fig
+*.log
+*.mat
+*.mdl
+
+# Cartelle di dipendenze o output temporanei
+*.mexw64
+*.mexmaci64
+*.mexmaci32
