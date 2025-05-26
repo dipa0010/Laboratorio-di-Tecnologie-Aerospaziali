@@ -40,13 +40,14 @@ h_bar  = [2.27, 2.35, 2.24]*1e-3;     % [m]
 % Cilindri (compressione): altezza e diametro medio in mm
 h_cil = [ 12.81, 12.68, 12.75 ] *1e-3;    % [m]
 d_cil = [  6.89,  6.96,  6.87 ] *1e-3;     % [m]
+infill = 0.70; % infill nei cilindri al 70% 
 
 % --- 3) Conversione in deformazione e sforzo per ciascun provino ---
 for k = 1:3
     % flessione a tre punti
     F = dati(k).forza;
     D = dati(k).spostamento * 1e-3;  % mm→m
-    L = l_bar(k);
+    L = 23.5*1e-3; % support span 
     b = b_bar(k);
     h = h_bar(k);
     
@@ -61,7 +62,7 @@ for k = 4:6
     D = dati(k).spostamento * 1e-3;  % mm→m
     h = h_cil(idx);
     d = d_cil(idx);
-    A = pi*(d/2).^2;
+    A = infill * pi*(d/2).^2;  
     
     dati(k).deformazione = D / h;
     dati(k).sforzo      = F ./ A;
@@ -110,7 +111,7 @@ for k = 1:3
     % qui sigma in MPa
     xlabel('\epsilon');
     ylabel('\sigma (MPa)');
-    ylim([-160 10]);
+    ylim([-120 10]);
     title(sprintf('Flessione %d: seleziona inizio e fine della parte lineare',k));
     grid on; hold on;
     
@@ -231,12 +232,12 @@ for idx = 1:3
     plot(eps(i_start:i_end), polyval(p2,eps(i_start:i_end))/1e6,'m-','LineWidth',1.5);
     legend('dati','start','end','fit comp.','fit elast.','Location','best');
 end
-          
+          %%
 E_GPa     = (E_comp/1e9);             % da Pa a GPa
                   
 % Calcola statistiche su E e su Severity
 meanE = mean(E_GPa);  stdE  = std(E_GPa,1);  cvE  = 100*stdE/meanE;
-meanS = mean(Severity); stdS = std(Severity,1); cvS = 100*stdS/meanS;
+meanS = mean(S_cr); stdS = std(S_cr,1); cvS = 100*stdS/meanS;
 
 %% Print risultati
 fprintf('\n ------------ PROVE DI COMPRESSIONE ------------ \n\n');
@@ -287,84 +288,4 @@ end
 fprintf(' \nValore medio    : %.2f MPa\n', mu_comp);
 fprintf('Dev. standard   : %.2f MPa\n', s_comp);
 fprintf('Coeff. variazione: %.1f %%\n', CV_comp);
-
-
-
-
-%% ------------- Plot riassuntivi ------------- %%
-figure('Name','Stress–Strain Curves','Color','w','Units','normalized','Position',[.1 .1 .6 .7]);
-tiledlayout(2,1,'TileSpacing','compact','Padding','compact');
-
-% --- Flexural Tests ---
-nexttile;
-hold on;
-for k = 1:3
-    plot(dati(k).deformazione, dati(k).sforzo/1e6, 'LineWidth',1.5);
-end
-% creazione asse comune
-Eps_common = linspace( ...
-    min(cellfun(@(d) min(d.deformazione), num2cell(dati(1:3)))) , ...
-    max(cellfun(@(d) max(d.deformazione), num2cell(dati(1:3)))) , ...
-    100 );
-MeanStress = zeros(size(Eps_common));
-StdStress  = zeros(size(Eps_common));
-for i = 1:numel(Eps_common)
-    vals = nan(1,3);
-    for k = 1:3
-        eps_k = dati(k).deformazione;
-        sig_k = dati(k).sforzo/1e6;
-        [epsu, ia] = unique(eps_k,'stable');
-        sigu = sig_k(ia);
-        vals(k) = interp1(epsu, sigu, Eps_common(i), 'linear');
-    end
-    MeanStress(i) = mean(vals);
-    StdStress(i)  = std(vals);
-end
-plot(Eps_common, MeanStress, 'k-', 'LineWidth',2);
-fill([Eps_common fliplr(Eps_common)], ...
-     [MeanStress+StdStress fliplr(MeanStress-StdStress)], ...
-     'k','FaceAlpha',.2,'EdgeColor','none');
-title('Flexural Tests');
-xlabel('\epsilon');
-ylabel('\sigma (MPa)');
-legend({'Barra 1','Barra 2','Barra 3','Media'}, 'Location','best');
-grid on;
-
-% --- Compression Tests ---
-nexttile;
-hold on;
-for k = 4:6
-    eps = (dati(k).deformazione);
-    sig = (dati(k).sforzo)/1e6;
-    plot(eps, sig, 'LineWidth',1.5);
-end
-% asse comune compressione
-Eps_comm = linspace( ...
-    min(cellfun(@(d) min((d.deformazione)), num2cell(dati(4:6)))) , ...
-    max(cellfun(@(d) max((d.deformazione)), num2cell(dati(4:6)))) , ...
-    100 );
-MeanC = zeros(size(Eps_comm));
-StdC  = zeros(size(Eps_comm));
-for i = 1:numel(Eps_comm)
-    vals = nan(1,3);
-    for kk = 4:6
-        eps_k = (dati(kk).deformazione);
-        sig_k = (dati(kk).sforzo)/1e6;
-        [epsu, ia] = unique(eps_k,'stable');
-        sigu = sig_k(ia);
-        vals(kk-3) = interp1(epsu, sigu, Eps_comm(i), 'linear');
-    end
-    MeanC(i) = mean(vals);
-    StdC(i)  = std(vals);
-end
-plot(Eps_comm, MeanC, 'k-', 'LineWidth',2);
-fill([Eps_comm fliplr(Eps_comm)], ...
-     [MeanC+StdC fliplr(MeanC-StdC)], ...
-     'k','FaceAlpha',.2,'EdgeColor','none');
-title('Compression Tests');
-xlabel('\epsilon ');
-ylabel('\sigma  (MPa)');
-legend({'Cilindro 1','Cilindro 2','Cilindro 3','Media'}, 'Location','best');
-grid on;
-
 
