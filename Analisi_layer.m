@@ -34,7 +34,7 @@ distanza_nominale = 0.05;
 tolleranza = 0.025;
 min_dist = distanza_nominale - tolleranza;
 max_dist = distanza_nominale + tolleranza;
-soglia_y = -100; % filtro su y
+soglia_y = 100; % filtro su y
 
 if nargin < 2
     output_csv = '';
