@@ -98,6 +98,10 @@ end
 %% ---------------- FLESSIONE ---------------- %% 
 
 %% Selezione manuale della Regione Lineare, calcolo E e Statistiche
+% a volte potrebbe buggarsi e selezionare da solo l'inizio della zona
+% lineare (inserisce in automatico la linea verde), basta stoppare il
+% codice e runnarlo di nuovo
+
 E_flex = nan(1,3);
 selFlex = nan(3,2);  % [eps_start, eps_end] per ciascuna prova
 
@@ -288,4 +292,5 @@ end
 fprintf(' \nValore medio    : %.2f MPa\n', mu_comp);
 fprintf('Dev. standard   : %.2f MPa\n', s_comp);
 fprintf('Coeff. variazione: %.1f %%\n', CV_comp);
+
 
