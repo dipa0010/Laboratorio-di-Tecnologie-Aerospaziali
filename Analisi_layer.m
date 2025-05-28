@@ -16,14 +16,10 @@ files = { ...
   'layer3_1.csv','layer3_2.csv','layer3_3.csv','layer3_4.csv','layer3_5.csv' ...
 };
 
-%%
-files = {'Sam_layer1', 'SAM_layer2'}
 
 %%
-close all
 distanze = calcola_distanze_layer(files, 'distanze_layers.csv');
 
- 
 
 %%
 function distanze = calcola_distanze_layer(files, output_csv)
