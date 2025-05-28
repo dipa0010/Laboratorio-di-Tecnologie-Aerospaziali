@@ -16,8 +16,11 @@ files = { ...
   'layer3_1.csv','layer3_2.csv','layer3_3.csv','layer3_4.csv','layer3_5.csv' ...
 };
 
+%%
+files = {'Sam_layer1', 'SAM_layer2'}
 
 %%
+close all
 distanze = calcola_distanze_layer(files, 'distanze_layers.csv');
 
  
@@ -31,7 +34,7 @@ distanza_nominale = 0.05;
 tolleranza = 0.025;
 min_dist = distanza_nominale - tolleranza;
 max_dist = distanza_nominale + tolleranza;
-soglia_y = 100; % filtro su y
+soglia_y = -100; % filtro su y
 
 if nargin < 2
     output_csv = '';
@@ -74,8 +77,8 @@ for i = 1:length(files)
 
     % Calcola distanze tra i massimi principali
     d = [];
-    if numel(selezionati_x) > 1
-        d = diff(selezionati_x);
+    if numel( x_max_valid) > 1
+        d = diff( x_max_valid);
         distanze = [distanze; d(:)];
     end
 
