@@ -51,7 +51,8 @@ for k = 1:3
     b = b_bar(k);
     h = h_bar(k);
     
-    dati(k).deformazione = D / L;
+    % ε = 6·d·s / L^2
+    dati(k).deformazione = (6 * h * D) / (L^2);
     % σ = 3·F·L / (2·b·h^2)
     dati(k).sforzo      = 3 .* F .* L ./ (2 .* b .* h.^2);
 end
