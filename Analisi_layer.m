@@ -26,8 +26,8 @@ function distanze = calcola_distanze_layer(files, output_csv)
 % Trova tutti i massimi locali e filtra quelli principali per distanza e soglia y>100
 % Stampa a video il numero di massimi locali, massimi principali e distanze misurate per ogni file
 
-distanza_nominale = 0.05;
-tolleranza = 0.025;
+distanza_nominale = 50;
+tolleranza = 25;
 min_dist = distanza_nominale - tolleranza;
 max_dist = distanza_nominale + tolleranza;
 soglia_y = 100; % filtro su y
@@ -38,7 +38,7 @@ end
 
 distanze = [];
 for i = 1:length(files)
-    dati = readmatrix(files{i});
+    dati = readmatrix(files{i})*1e3;
     x = dati(:,1);
     y = dati(:,2);
 
@@ -73,12 +73,12 @@ for i = 1:length(files)
 
     % Calcola distanze tra i massimi principali
     d = [];
-    if numel( x_max_valid) > 1
-        d = diff( x_max_valid);
+    if numel( selezionati_x) > 1
+        d = diff( selezionati_x);
         distanze = [distanze; d(:)];
     end
 
-    % Stampa informazioni a schermo
+    % Stampa informazioni 
     fprintf('File: %s\n', files{i});
     fprintf('  Numero di massimi locali trovati: %d\n', numel(ind_max));
     fprintf('  Numero di massimi validi (y > %d): %d\n', soglia_y, numel(x_max_valid));
