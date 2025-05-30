@@ -7,6 +7,7 @@
 % per questo motivo è stata implementata una funzione findpeaks ad hoc per
 % il caso in questione. 
 % La funzione restituisce un file .CSV contenente tutte le distanze calcolate in micrometri
+% Autore: Andrea di Palermo 
 
 close all; clear; clc;
 
