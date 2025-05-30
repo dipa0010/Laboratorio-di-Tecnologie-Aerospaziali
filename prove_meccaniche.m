@@ -1,6 +1,30 @@
+% ANALISI DATI MECCANICI - FLESSIONE E COMPRESSIONE
+%
+% Descrizione:
+% Questo script importa, elabora e analizza dati sperimentali provenienti
+% da prove meccaniche di flessione (3 punti) e compressione su provini
+% stampati in 3D. Il codice effettua:
+%   - Importazione dei dati da file .dat
+%   - Conversione da forza/spostamento a sforzo/deformazione
+%   - Calcolo del modulo elastico con selezione manuale della regione lineare
+%   - Calcolo della resistenza massima e della severità del difetto (solo compressione)
+%   - Visualizzazione dei risultati e statistiche
+%
+% Tipi di provini:
+%   - Barre per flessione (Prove 1-3)
+%   - Cilindri per compressione (Prove 4-6)
+%
+% Output:
+%   - Curve sforzo-deformazione
+%   - Modulo elastico medio e deviazione standard
+%   - Valori di resistenza a flessione/compressione
+%   - Severità del difetto calcolata come: S(%) = 100 * (1 - E_compatt/E_elastico)
+%
+% Autore: Andrea di Palermo 
 close all
 clear
 clc
+
 %% Importazione Dati e Conversioni 
 % Nomi dei file
 files = { '40_1.dat','40_2.dat','40_3.dat', ...
